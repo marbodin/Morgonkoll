@@ -1,0 +1,22 @@
+.DS_Store
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Downloaded models and caches
+.cache/
+models/
+
+# Generated narration and audio
+build/
+output/*
+!output/.gitkeep
+voice_samples/*
+!voice_samples/.gitkeep
+
+# Local voice references may contain personal biometric data
+config/voice_reference.*
+

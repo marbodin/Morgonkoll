@@ -1,0 +1,79 @@
+name: Voice audition
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_asr:
+        description: Run optional Swedish speech-recognition comparison
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  audition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      HF_HOME: ${{ github.workspace }}/.cache/huggingface
+      MORGONKOLL_CACHE_DIR: ${{ github.workspace }}/.cache/morgonkoll
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends ffmpeg
+
+      - name: Restore candidate models
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cache/huggingface
+            .cache/morgonkoll
+          key: audition-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('config/voice_candidates.yml', 'pyproject.toml') }}
+          restore-keys: |
+            audition-${{ runner.os }}-${{ runner.arch }}-
+
+      - name: Install benchmark engines
+        shell: bash
+        run: |
+          extras="benchmark"
+          if [[ "${{ inputs.run_asr }}" == "true" ]]; then
+            extras="benchmark,asr"
+          fi
+          python -m pip install --disable-pip-version-check ".[${extras}]"
+          ram_gb="$(awk '/MemTotal/ {printf "%.1f", $2/1024/1024}' /proc/meminfo)"
+          echo "RUNNER_RAM_GB=$ram_gb" >> "$GITHUB_ENV"
+          if awk "BEGIN {exit !($ram_gb >= 6.0)}"; then
+            python -m pip install --disable-pip-version-check ".[chatterbox]"
+            python -m pip install --disable-pip-version-check --force-reinstall "setuptools<81"
+          fi
+          python -m pip check
+
+      - name: Generate identical candidate samples
+        shell: bash
+        run: |
+          asr_args=()
+          if [[ "${{ inputs.run_asr }}" == "true" ]]; then
+            asr_args=(--with-asr)
+          fi
+          python -m src.voice_benchmark \
+            --mode audition \
+            --no-select \
+            --runner-ram-gb "$RUNNER_RAM_GB" \
+            "${asr_args[@]}"
+
+      - name: Upload samples and comparison report
+        uses: actions/upload-artifact@v4
+        with:
+          name: morgonkoll-voice-audition
+          path: voice_samples/
+          if-no-files-found: error
+          retention-days: 14

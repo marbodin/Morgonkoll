@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "selection_mode": "automatic",
+  "candidate_id": "kokoro-sv-stina",
+  "engine": "kokoro_sv",
+  "model": "Joakim/kokoro-sv-voices",
+  "voice": "Stina",
+  "speaking_rate": 1.0,
+  "reason": "Automatic benchmark winner at 8.47/10 among production-safe candidates. Subjective listening remains recommended; see voice_samples/comparison_report.md.",
+  "license": "Apache-2.0",
+  "benchmark_date": "2026-09-10",
+  "fallbacks": [
+    "piper-alma-medium"
+  ]
+}

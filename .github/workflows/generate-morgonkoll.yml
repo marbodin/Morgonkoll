@@ -1,0 +1,117 @@
+name: Generate Morgonkoll
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+      timezone: "Europe/Stockholm"
+  workflow_dispatch:
+    inputs:
+      script_path:
+        description: Swedish source script in the repository
+        required: false
+        default: content/script.txt
+      episode_date:
+        description: Episode date (YYYY-MM-DD); blank means today
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: morgonkoll-daily
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      HF_HOME: ${{ github.workspace }}/.cache/huggingface
+      MORGONKOLL_CACHE_DIR: ${{ github.workspace }}/.cache/morgonkoll
+      SCRIPT_PATH: ${{ inputs.script_path }}
+      REQUESTED_DATE: ${{ inputs.episode_date }}
+      TTS_ENGINE: ${{ vars.TTS_ENGINE }}
+      TTS_MODEL: ${{ vars.TTS_MODEL }}
+      TTS_VOICE: ${{ vars.TTS_VOICE }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends ffmpeg
+
+      - name: Restore pinned voice models
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cache/huggingface
+            .cache/morgonkoll
+          key: voices-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('config/selected_voice.json', 'config/voice_candidates.yml', 'pyproject.toml') }}
+          restore-keys: |
+            voices-${{ runner.os }}-${{ runner.arch }}-
+
+      - name: Install production engines
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check ".[production]"
+          selected_engine="$(python -c 'import json; print(json.load(open("config/selected_voice.json"))["engine"])')"
+          if [[ "$selected_engine" == "chatterbox" || "${TTS_ENGINE:-}" == "chatterbox" ]]; then
+            python -m pip install --disable-pip-version-check ".[chatterbox]"
+            python -m pip install --disable-pip-version-check --force-reinstall "setuptools<81"
+          fi
+          if [[ "$selected_engine" == "mms" || "${TTS_ENGINE:-}" == "mms" ]]; then
+            python -m pip install --disable-pip-version-check ".[mms]"
+          fi
+          python -m pip check
+
+      - name: Resolve inputs
+        id: inputs
+        shell: bash
+        run: |
+          script="${SCRIPT_PATH:-content/script.txt}"
+          episode_date="${REQUESTED_DATE:-$(date -u +%F)}"
+          test -s "$script" || { echo "::error::Missing or empty source script: $script"; exit 1; }
+          echo "script=$script" >> "$GITHUB_OUTPUT"
+          echo "episode_date=$episode_date" >> "$GITHUB_OUTPUT"
+
+      - name: Lightweight free-voice health check
+        run: python -m src.health_check
+
+      - name: Generate normalized MP3
+        shell: bash
+        run: |
+          cover_args=()
+          if [[ -f assets/cover.jpg ]]; then
+            cover_args=(--cover assets/cover.jpg)
+          fi
+          python -m src.pipeline \
+            --script "${{ steps.inputs.outputs.script }}" \
+            --date "${{ steps.inputs.outputs.episode_date }}" \
+            "${cover_args[@]}"
+
+      - name: Verify MP3 for Telegram audio transport
+        run: python -m src.verify_audio "output/morgonkoll-${{ steps.inputs.outputs.episode_date }}.mp3"
+
+      - name: Send episode to phone with Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python -m src.telegram_delivery \
+            "output/morgonkoll-${{ steps.inputs.outputs.episode_date }}.mp3" \
+            --caption "God morgon! Här kommer Morgonkoll för ${{ steps.inputs.outputs.episode_date }}."
+
+      - name: Upload episode
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: morgonkoll-${{ steps.inputs.outputs.episode_date }}
+          path: output/morgonkoll-${{ steps.inputs.outputs.episode_date }}.mp3
+          if-no-files-found: error
+          retention-days: 14

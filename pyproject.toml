@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "morgonkoll"
+version = "0.1.0"
+description = "Zero-cost, local Swedish podcast narration pipeline"
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+license = { text = "MIT" }
+dependencies = [
+  "huggingface-hub>=0.27,<2",
+  "numpy>=1.24,<3",
+  "PyYAML>=6.0,<7",
+  "soundfile>=0.12,<1",
+]
+
+[project.optional-dependencies]
+piper = [
+  "piper-tts==1.7.0",
+]
+kokoro-sv = [
+  "kokoro==0.9.4",
+  "kokoro-sv @ git+https://github.com/joakimeriksson/kokoro-sv.git@42d1a3a5c083f405a6eb8e14c2a405ccb36cc90f",
+]
+mms = [
+  "sentencepiece>=0.2,<1",
+  "torch>=2.4,<3",
+  "transformers>=4.46,<6",
+]
+chatterbox = [
+  "chatterbox-tts @ git+https://github.com/resemble-ai/chatterbox.git@5de7a54aa4e5e2baadb0182dde554908b48b85c2",
+  "setuptools<81",
+]
+production = [
+  "kokoro==0.9.4",
+  "kokoro-sv @ git+https://github.com/joakimeriksson/kokoro-sv.git@42d1a3a5c083f405a6eb8e14c2a405ccb36cc90f",
+  "piper-tts==1.7.0",
+]
+benchmark = [
+  "kokoro==0.9.4",
+  "kokoro-sv @ git+https://github.com/joakimeriksson/kokoro-sv.git@42d1a3a5c083f405a6eb8e14c2a405ccb36cc90f",
+  "piper-tts==1.7.0",
+  "sentencepiece>=0.2,<1",
+  "torch>=2.4,<3",
+  "transformers>=4.46,<6",
+]
+asr = [
+  "faster-whisper>=1.1,<2",
+]
+test = [
+  "pytest>=8,<10",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]

@@ -1,0 +1,58 @@
+schema_version: 1
+# Applied only to the generated build/narration.txt copy. Source scripts are
+# never rewritten. Longer terms are matched before shorter overlapping terms.
+rules:
+  - written: OpenAI
+    spoken: "Open A I"
+    engines:
+      kokoro_sv: OpenAI
+  - written: ChatGPT
+    spoken: "Chatt G P T"
+    engines:
+      kokoro_sv: ChatGPT
+  - written: Google DeepMind
+    spoken: "Google Diip Majnd"
+    engines:
+      kokoro_sv: "Google DeepMind"
+  - written: DeepMind
+    spoken: "Diip Majnd"
+    engines:
+      kokoro_sv: DeepMind
+  - written: PlayStation
+    spoken: "Plejs-tejschen"
+    engines:
+      kokoro_sv: PlayStation
+  - written: Microsoft
+    spoken: "Majkrosoft"
+    engines:
+      kokoro_sv: Microsoft
+  - written: Minecraft
+    spoken: "Majnkraft"
+    engines:
+      kokoro_sv: Minecraft
+  - written: Anthropic
+    spoken: "Antropik"
+    engines:
+      kokoro_sv: Anthropic
+  - written: GitHub
+    spoken: "Gitt-habb"
+    engines:
+      kokoro_sv: GitHub
+  - written: Nvidia
+    spoken: "Envidia"
+    engines:
+      kokoro_sv: Nvidia
+  - written: Nintendo
+    spoken: "Nintändo"
+    engines:
+      kokoro_sv: Nintendo
+  - written: Gemini
+    spoken: "Djeminaj"
+    engines:
+      kokoro_sv: Gemini
+  - written: Xbox
+    spoken: "Eks-box"
+    engines:
+      kokoro_sv: Xbox
+  - written: AI
+    spoken: "A I"

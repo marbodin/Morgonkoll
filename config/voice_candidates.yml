@@ -1,0 +1,400 @@
+schema_version: 1
+last_reviewed: "2026-09-10"
+runner_baseline:
+  label: ubuntu-latest
+  private_repository:
+    cpu: 2
+    ram_gb: 8
+    storage_gb: 14
+  public_repository:
+    cpu: 4
+    ram_gb: 16
+    storage_gb: 14
+  source: https://docs.github.com/en/actions/reference/runners/github-hosted-runners
+
+candidates:
+  - id: kokoro-sv-stina
+    label: "Kokoro Swedish Stina"
+    engine: kokoro_sv
+    model: Joakim/kokoro-sv-voices
+    voice: Stina
+    status: production
+    license: Apache-2.0
+    code_license: Apache-2.0
+    approximate_download_mb: 390
+    minimum_ram_gb: 3.0
+    github_actions: true
+    speaking_rate: 1.0
+    source:
+      code_repository: joakimeriksson/kokoro-sv
+      code_revision: 42d1a3a5c083f405a6eb8e14c2a405ccb36cc90f
+      voice_repository: Joakim/kokoro-sv-voices
+      voice_revision: 2c7968d59c2fda1667e9e3ff0dd9967150a53f74
+      g2p_repository: Joakim/kokoro-sv-g2p
+      g2p_revision: a5aac876ccb2bf7480a129774c7e89cf3bbeac01
+      package: "kokoro-sv from Git commit 42d1a3a5c083f405a6eb8e14c2a405ccb36cc90f"
+      model_card: https://huggingface.co/Joakim/kokoro-sv-voices/blob/2c7968d59c2fda1667e9e3ff0dd9967150a53f74/README.md
+    evidence_scores:
+      swedish_naturalness: 8.5
+      pronunciation: 8.6
+      prosody: 8.8
+      pleasantness: 8.5
+      consistency: 7.8
+      reliability: 7.8
+      practicality: 8.5
+    notes: "Swedish-specific 82M model over 23 real speakers with neural Swedish G2P. Stina is the expressive voice recommended for automatic podcast evaluation."
+
+  - id: kokoro-sv-alice
+    label: "Kokoro Swedish Alice"
+    engine: kokoro_sv
+    model: Joakim/kokoro-sv-voices
+    voice: Alice
+    status: audition
+    license: Apache-2.0
+    code_license: Apache-2.0
+    approximate_download_mb: 390
+    minimum_ram_gb: 3.0
+    github_actions: true
+    speaking_rate: 0.92
+    source:
+      code_repository: joakimeriksson/kokoro-sv
+      code_revision: 42d1a3a5c083f405a6eb8e14c2a405ccb36cc90f
+      voice_repository: Joakim/kokoro-sv-voices
+      voice_revision: 2c7968d59c2fda1667e9e3ff0dd9967150a53f74
+      g2p_repository: Joakim/kokoro-sv-g2p
+      g2p_revision: a5aac876ccb2bf7480a129774c7e89cf3bbeac01
+      package: "kokoro-sv from Git commit 42d1a3a5c083f405a6eb8e14c2a405ccb36cc90f"
+      model_card: https://huggingface.co/Joakim/kokoro-sv-voices/blob/2c7968d59c2fda1667e9e3ff0dd9967150a53f74/README.md
+    evidence_scores:
+      swedish_naturalness: 8.3
+      pronunciation: 8.6
+      prosody: 8.2
+      pleasantness: 8.5
+      consistency: 7.8
+      reliability: 7.8
+      practicality: 8.5
+    notes: "Calm voice from the same pinned Swedish pack; included for human audition."
+
+  - id: kokoro-sv-bjorn
+    label: "Kokoro Swedish Björn"
+    engine: kokoro_sv
+    model: Joakim/kokoro-sv-voices
+    voice: Björn
+    status: audition
+    license: Apache-2.0
+    code_license: Apache-2.0
+    approximate_download_mb: 390
+    minimum_ram_gb: 3.0
+    github_actions: true
+    speaking_rate: 1.05
+    source:
+      code_repository: joakimeriksson/kokoro-sv
+      code_revision: 42d1a3a5c083f405a6eb8e14c2a405ccb36cc90f
+      voice_repository: Joakim/kokoro-sv-voices
+      voice_revision: 2c7968d59c2fda1667e9e3ff0dd9967150a53f74
+      g2p_repository: Joakim/kokoro-sv-g2p
+      g2p_revision: a5aac876ccb2bf7480a129774c7e89cf3bbeac01
+      package: "kokoro-sv from Git commit 42d1a3a5c083f405a6eb8e14c2a405ccb36cc90f"
+      model_card: https://huggingface.co/Joakim/kokoro-sv-voices/blob/2c7968d59c2fda1667e9e3ff0dd9967150a53f74/README.md
+    evidence_scores:
+      swedish_naturalness: 8.1
+      pronunciation: 8.6
+      prosody: 8.0
+      pleasantness: 8.2
+      consistency: 7.8
+      reliability: 7.8
+      practicality: 8.5
+    notes: "Deepest male voice in the pack; included because gender is not an automatic preference."
+
+  - id: piper-alma-medium
+    label: "Piper Alma medium"
+    engine: piper
+    model: sv_SE-alma-medium
+    voice: alma
+    status: production
+    license: CC-BY-4.0
+    code_license: GPL-3.0-or-later
+    approximate_download_mb: 64
+    minimum_ram_gb: 1.0
+    github_actions: true
+    speaking_rate: 1.02
+    source:
+      repository: rhasspy/piper-voices
+      revision: 1162a9173d0ce503555aed757976b7a9912eae4c
+      model_path: sv/sv_SE/alma/medium/sv_SE-alma-medium.onnx
+      config_path: sv/sv_SE/alma/medium/sv_SE-alma-medium.onnx.json
+      model_card: https://huggingface.co/rhasspy/piper-voices/blob/1162a9173d0ce503555aed757976b7a9912eae4c/sv/sv_SE/alma/medium/MODEL_CARD
+    evidence_scores:
+      swedish_naturalness: 7.5
+      pronunciation: 7.6
+      prosody: 7.2
+      pleasantness: 7.4
+      consistency: 9.2
+      reliability: 9.5
+      practicality: 10.0
+    notes: "Native Swedish 2026 Piper voice with explicitly CC-BY-4.0 model weights; preferred lightweight open fallback."
+
+  - id: piper-nst-medium
+    label: "Piper NST medium"
+    engine: piper
+    model: sv_SE-nst-medium
+    voice: nst
+    status: audition
+    license: "Repository metadata MIT; voice card states CC0 dataset but no separate weight license"
+    code_license: GPL-3.0-or-later
+    approximate_download_mb: 64
+    minimum_ram_gb: 1.0
+    github_actions: true
+    speaking_rate: 1.32
+    source:
+      repository: rhasspy/piper-voices
+      revision: 1162a9173d0ce503555aed757976b7a9912eae4c
+      model_path: sv/sv_SE/nst/medium/sv_SE-nst-medium.onnx
+      config_path: sv/sv_SE/nst/medium/sv_SE-nst-medium.onnx.json
+      model_card: https://huggingface.co/rhasspy/piper-voices/blob/1162a9173d0ce503555aed757976b7a9912eae4c/sv/sv_SE/nst/medium/MODEL_CARD
+    evidence_scores:
+      swedish_naturalness: 7.1
+      pronunciation: 7.5
+      prosody: 6.8
+      pleasantness: 7.0
+      consistency: 9.2
+      reliability: 9.5
+      practicality: 10.0
+    notes: "Native Swedish single-speaker VITS voice trained by KBLab; deterministic, small and CPU-safe. Native length_scale was calibrated to about 155 spoken WPM on the fixed Morgonkoll script."
+
+  - id: mms-swedish
+    label: "Meta MMS Swedish"
+    engine: mms
+    model: facebook/mms-tts-swe
+    voice: default
+    status: audition
+    license: CC-BY-NC-4.0
+    code_license: Apache-2.0
+    approximate_download_mb: 145
+    minimum_ram_gb: 2.0
+    github_actions: true
+    speaking_rate: 1.28
+    source:
+      repository: facebook/mms-tts-swe
+      revision: 62c98ce783f0a4c127d35300bca120dbdf03ad93
+      model_card: https://huggingface.co/facebook/mms-tts-swe/blob/62c98ce783f0a4c127d35300bca120dbdf03ad93/README.md
+    evidence_scores:
+      swedish_naturalness: 6.2
+      pronunciation: 6.8
+      prosody: 5.9
+      pleasantness: 6.0
+      consistency: 8.3
+      reliability: 8.5
+      practicality: 7.4
+    notes: "Native Swedish VITS checkpoint; free for this personal, non-commercial project, but not for commercial use."
+
+  - id: chatterbox-multilingual-v3
+    label: "Chatterbox Multilingual V3"
+    engine: chatterbox
+    model: ResembleAI/chatterbox
+    voice: built-in
+    status: audition
+    license: MIT
+    code_license: MIT
+    approximate_download_mb: 3075
+    minimum_ram_gb: 6.0
+    github_actions: true
+    speaking_rate: 1.0
+    source:
+      repository: ResembleAI/chatterbox
+      revision: 5bb1f6ee58e50c3b8d408bc82a6d3740c2db6e18
+      t3_model: v3
+      language: sv
+      package: "chatterbox-tts from Git commit 5de7a54aa4e5e2baadb0182dde554908b48b85c2"
+      model_card: https://github.com/resemble-ai/chatterbox/blob/5de7a54aa4e5e2baadb0182dde554908b48b85c2/README.md
+    evidence_scores:
+      swedish_naturalness: 8.3
+      pronunciation: 8.0
+      prosody: 8.6
+      pleasantness: 8.4
+      consistency: 7.6
+      reliability: 6.5
+      practicality: 3.0
+    notes: "Quality-leading 500M candidate with explicit Swedish support. Measured locally at 3.34 GB maximum resident memory and 488.8 seconds of synthesis for 58.9 seconds of audio on Apple Silicon CPU. Kept out of unattended production because an 8-minute episode could take well over an hour on a 2-vCPU x64 runner."
+
+  - id: coqui-sv-common-voice-vits
+    label: "Community Coqui Swedish VITS"
+    engine: coqui
+    model: neongeckocom/tts-vits-cv-sv
+    voice: default
+    status: review_only
+    license: BSD-3-Clause
+    code_license: MPL-2.0
+    approximate_download_mb: 114
+    minimum_ram_gb: 4.0
+    github_actions: false
+    speaking_rate: 1.0
+    source:
+      repository: neongeckocom/tts-vits-cv-sv
+      model_card: https://huggingface.co/neongeckocom/tts-vits-cv-sv
+    evidence_scores: {}
+    excluded_reason: "The 2022 checkpoint has weak published evaluation and compatibility with the maintained idiap/coqui-ai-TTS toolkit is not verified."
+    notes: "Tracked as a lightweight lab option; never selected automatically without a fresh compatibility and listening test."
+
+  - id: speecht5-swedish
+    label: "SpeechT5 Swedish Common Voice"
+    engine: speecht5
+    model: GreenCounsel/speecht5_tts_common_voice_5_sv
+    voice: cmu-arctic-xvector
+    status: review_only
+    license: MIT
+    code_license: Apache-2.0
+    approximate_download_mb: 654
+    minimum_ram_gb: 4.0
+    github_actions: false
+    speaking_rate: 1.0
+    source:
+      repository: GreenCounsel/speecht5_tts_common_voice_5_sv
+      model_card: https://huggingface.co/GreenCounsel/speecht5_tts_common_voice_5_sv
+    evidence_scores: {}
+    excluded_reason: "Stale 2023 fine-tune with only validation loss, manual Swedish character transliteration, and no listening or runner benchmark."
+    notes: "Potential compatibility experiment, not a quality recommendation."
+
+  - id: omnivoice
+    label: "OmniVoice Swedish"
+    engine: omnivoice
+    model: k2-fsa/OmniVoice
+    voice: none
+    status: excluded
+    license: CC-BY-NC
+    code_license: Apache-2.0
+    approximate_download_mb: 3270
+    minimum_ram_gb: 10.0
+    github_actions: false
+    speaking_rate: 1.0
+    source:
+      repository: k2-fsa/OmniVoice
+      model_card: https://github.com/k2-fsa/OmniVoice
+    evidence_scores: {}
+    excluded_reason: "Swedish is documented, but non-commercial weights and missing standard-CPU benchmarks fail the open production policy."
+
+  - id: qwen3-tts
+    label: "Qwen3-TTS 0.6B"
+    engine: qwen3_tts
+    model: Qwen/Qwen3-TTS-12Hz-0.6B-Base
+    voice: none
+    status: excluded
+    license: Apache-2.0
+    code_license: Apache-2.0
+    approximate_download_mb: 2400
+    minimum_ram_gb: 8.0
+    github_actions: false
+    speaking_rate: 1.0
+    source:
+      repository: QwenLM/Qwen3-TTS
+      model_card: https://github.com/QwenLM/Qwen3-TTS
+    evidence_scores: {}
+    excluded_reason: "The official supported-language list does not include Swedish."
+
+  - id: melo-tts
+    label: "MeloTTS"
+    engine: melotts
+    model: myshell-ai/MeloTTS
+    voice: none
+    status: excluded
+    license: MIT
+    code_license: MIT
+    approximate_download_mb: 500
+    minimum_ram_gb: 3.0
+    github_actions: true
+    speaking_rate: 1.0
+    source:
+      repository: myshell-ai/MeloTTS
+      model_card: https://github.com/myshell-ai/MeloTTS
+    evidence_scores: {}
+    excluded_reason: "Official language list does not include Swedish."
+
+  - id: xtts-v2
+    label: "XTTS v2"
+    engine: xtts
+    model: coqui/XTTS-v2
+    voice: none
+    status: excluded
+    license: Coqui-Public-Model-License-1.0.0
+    code_license: MPL-2.0
+    approximate_download_mb: 1900
+    minimum_ram_gb: 8.0
+    github_actions: false
+    speaking_rate: 1.0
+    source:
+      repository: coqui/XTTS-v2
+      model_card: https://huggingface.co/coqui/XTTS-v2
+    evidence_scores: {}
+    excluded_reason: "Swedish is absent from the official supported-language list and CPU/runtime risk is high."
+
+  - id: parler-tts
+    label: "Parler-TTS"
+    engine: parler
+    model: parler-tts/parler-tts-mini-multilingual-v1.1
+    voice: none
+    status: excluded
+    license: Apache-2.0
+    code_license: Apache-2.0
+    approximate_download_mb: 2400
+    minimum_ram_gb: 8.0
+    github_actions: false
+    speaking_rate: 1.0
+    source:
+      repository: parler-tts/parler-tts-mini-multilingual-v1.1
+      model_card: https://huggingface.co/parler-tts/parler-tts-mini-multilingual-v1.1
+    evidence_scores: {}
+    excluded_reason: "No documented Swedish support and excessive CPU cost for this runner envelope."
+
+  - id: f5-tts
+    label: "F5-TTS Swedish"
+    engine: f5
+    model: EkhoCollective/f5-tts-swedish
+    voice: none
+    status: excluded
+    license: CC-BY-NC-4.0
+    code_license: MIT
+    approximate_download_mb: 2400
+    minimum_ram_gb: 12.0
+    github_actions: false
+    speaking_rate: 1.0
+    source:
+      repository: EkhoCollective/f5-tts-swedish
+      model_card: https://huggingface.co/EkhoCollective/f5-tts-swedish
+    evidence_scores: {}
+    excluded_reason: "The Swedish checkpoint is CC-BY-NC-4.0, 3.38 GB, and has no standard-runner CPU benchmark."
+
+  - id: fish-speech
+    label: "Fish Speech"
+    engine: fish
+    model: fishaudio/s2-pro
+    voice: none
+    status: excluded
+    license: Fish-Audio-Research-License
+    code_license: Apache-2.0
+    approximate_download_mb: 11000
+    minimum_ram_gb: 16.0
+    github_actions: false
+    speaking_rate: 1.0
+    source:
+      repository: fishaudio/fish-speech
+      model_card: https://github.com/fishaudio/fish-speech
+    evidence_scores: {}
+    excluded_reason: "Swedish support exists, but research-only terms, roughly 11 GB of files, and H200-only published speed do not satisfy the standard CPU runner."
+
+  - id: styletts2
+    label: "StyleTTS 2"
+    engine: styletts
+    model: yl4579/StyleTTS2
+    voice: none
+    status: excluded
+    license: MIT
+    code_license: MIT
+    approximate_download_mb: 1000
+    minimum_ram_gb: 8.0
+    github_actions: false
+    speaking_rate: 1.0
+    source:
+      repository: yl4579/StyleTTS2
+      model_card: https://github.com/yl4579/StyleTTS2
+    evidence_scores: {}
+    excluded_reason: "No maintained official Swedish checkpoint."

@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "selection_mode": "human",
+  "candidate_id": "piper-alma-medium",
+  "engine": "piper",
+  "model": "sv_SE-alma-medium",
+  "voice": "alma",
+  "speaking_rate": 1.02,
+  "reason": "Human override selected after listening to the fixed Morgonkoll audition sample.",
+  "license": "CC-BY-4.0",
+  "benchmark_date": "2026-09-10",
+  "fallbacks": [
+    "kokoro-sv-stina"
+  ]
+}

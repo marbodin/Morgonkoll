@@ -1,0 +1,559 @@
+# AUTOMATIC BEST FREE VOICE SELECTION
+
+Do NOT hard-code Piper, Kokoro, Coqui or any specific TTS engine as the default merely because it is mentioned in this prompt.
+
+Your job is to find, evaluate and use the BEST currently available completely free Swedish-capable TTS voice that can reliably run inside a standard GitHub Actions Linux runner.
+
+The most important goal is:
+
+BEST POSSIBLE NATURAL SWEDISH PODCAST NARRATION AT ZERO COST.
+
+This requirement overrides preference for any particular TTS library.
+
+---
+
+# ZERO-COST REQUIREMENT
+
+The selected TTS solution must:
+
+- cost 0 SEK per generation
+- require no paid API
+- require no subscription
+- require no billing account
+- require no credit card
+- have no automatic transition into paid usage
+- be runnable locally on GitHub Actions
+- have a license compatible with this personal use
+- not require my own computer to be online
+
+Do NOT use:
+
+ElevenLabs
+Google Cloud TTS
+Azure Speech
+AWS Polly
+OpenAI TTS
+paid Hugging Face inference
+paid inference endpoints
+or any other metered commercial TTS API.
+
+Downloading a free/open model from Hugging Face or another model repository is allowed when its license permits the intended use.
+
+---
+
+# DISCOVER CURRENT TTS OPTIONS
+
+Before choosing a TTS engine, research CURRENT available open-source/free TTS models.
+
+Do not rely solely on your built-in knowledge because the open-source TTS ecosystem changes quickly.
+
+Investigate strong current candidates for Swedish or high-quality multilingual speech.
+
+Potential families to investigate include, but are NOT limited to:
+
+Kokoro
+Piper
+Coqui / XTTS-compatible models
+MeloTTS
+Parler-TTS
+F5-TTS
+Fish Speech
+StyleTTS
+VITS-based Swedish models
+Hugging Face Swedish TTS models
+newer multilingual open-source TTS systems
+
+Do not assume any of these is best.
+
+Discover newer alternatives if available.
+
+Reject candidates that:
+
+- do not actually support Swedish well
+- sound clearly robotic
+- require a GPU
+- exceed realistic GitHub Actions memory/runtime
+- require a paid API
+- have unsuitable licensing
+- are unreliable to download automatically
+- require authentication to a paid service
+- cannot generate a 7–9 minute episode reliably
+
+---
+
+# AUTOMATIC VOICE BENCHMARK
+
+Implement:
+
+python -m src.voice_benchmark
+
+This utility should automatically benchmark viable free Swedish voices.
+
+Create a fixed Swedish benchmark script of approximately 45–60 seconds.
+
+The benchmark should deliberately contain:
+
+normal Swedish prose
+AI terminology
+English company names
+numbers
+percentages
+dates
+money
+technology terminology
+short sentences
+long sentences
+questions
+natural transitions
+
+For example, include terms such as:
+
+AI
+OpenAI
+Anthropic
+Nvidia
+Microsoft
+Minecraft
+Xbox
+Google DeepMind
+USA
+EU
+2026
+10 procent
+13 miljarder dollar
+
+This makes the benchmark representative of Morgonkoll.
+
+Generate:
+
+voice_samples/
+
+with one audio sample per viable candidate.
+
+---
+
+# AUTOMATIC QUALITY EVALUATION
+
+Do not simply select the fastest model.
+
+Quality matters much more than speed.
+
+Score candidates approximately according to:
+
+40% Swedish naturalness
+20% pronunciation
+15% prosody and rhythm
+10% voice pleasantness for an 8-minute podcast
+5% audio consistency
+5% generation reliability
+5% computational practicality
+
+Latency should only matter enough to ensure the daily GitHub Action can finish reliably.
+
+A voice that takes several minutes to generate the episode is acceptable if it sounds materially better.
+
+---
+
+# HOW TO EVALUATE QUALITY
+
+Use the strongest practical zero-cost evaluation available.
+
+Prefer a combination of:
+
+1. objective technical checks
+2. local speech recognition / transcription comparison where practical
+3. pronunciation-error detection
+4. audio quality metrics where useful
+5. model metadata and documented Swedish capability
+6. human listening benchmark
+
+Do NOT pretend that an automated metric can perfectly determine whether a voice sounds pleasant.
+
+Therefore implement TWO selection modes.
+
+---
+
+# MODE A – AUTOMATIC DEFAULT
+
+On initial setup:
+
+evaluate compatible candidates automatically.
+
+Reject technically poor candidates.
+
+Select the strongest candidate according to available objective evidence and documented Swedish performance.
+
+Save the result to:
+
+config/selected_voice.json
+
+Example:
+
+{
+  "engine": "...",
+  "model": "...",
+  "voice": "...",
+  "reason": "...",
+  "license": "...",
+  "benchmark_date": "..."
+}
+
+The daily workflow should then use this selected voice.
+
+Do NOT rerun the full benchmark every morning.
+
+---
+
+# MODE B – HUMAN FINAL SELECTION
+
+Because voice quality is subjective, also create a GitHub workflow:
+
+.github/workflows/voice-audition.yml
+
+It should be manually runnable.
+
+When executed it should:
+
+1. identify the best viable free candidates
+2. generate the exact same Swedish sample with each
+3. package the samples as a GitHub Actions artifact
+4. clearly name each candidate
+5. generate a comparison report
+
+I should be able to listen to:
+
+Candidate A
+Candidate B
+Candidate C
+Candidate D
+
+without knowing or caring about the underlying technical complexity.
+
+The README should tell me:
+
+"Listen to the samples and choose the voice you like most."
+
+Provide a simple way to set:
+
+TTS_ENGINE
+TTS_MODEL
+TTS_VOICE
+
+or update selected_voice.json.
+
+---
+
+# IMPORTANT: DEFAULT SHOULD STILL WORK AUTOMATICALLY
+
+Human audition is OPTIONAL.
+
+I should NOT need to select a voice before Morgonkoll works.
+
+Copilot must choose the strongest default automatically.
+
+Human selection merely lets me override it later.
+
+---
+
+# GITHUB ACTIONS HARDWARE
+
+The production TTS must work on a standard free/included GitHub Linux runner.
+
+Prefer:
+
+ubuntu-latest
+
+Do not require:
+
+GPU runners
+larger runners
+macOS runners
+self-hosted runners
+my Mac
+my iPhone
+
+Check actual RAM and CPU requirements before selecting the production model.
+
+A model that technically runs but regularly causes out-of-memory failures is not acceptable.
+
+---
+
+# MODEL CACHING
+
+TTS models may be large.
+
+Use GitHub Actions caching appropriately.
+
+Cache downloaded model weights where allowed.
+
+Do not redownload a multi-gigabyte model every morning if it can safely be cached.
+
+Use cache keys that account for:
+
+engine
+model
+version
+
+Keep the project within GitHub's included storage/minute limits.
+
+If the highest-quality model would consume unreasonable GitHub Actions resources, choose the next-best model.
+
+---
+
+# LONG-FORM PODCAST QUALITY
+
+Do NOT necessarily synthesize the entire 8-minute script in one request/pass.
+
+Determine the best strategy for the selected TTS engine.
+
+If appropriate:
+
+split narration into semantic paragraphs or sections.
+
+Generate them individually.
+
+Preserve consistent:
+
+voice
+speed
+volume
+tone
+
+Then concatenate using ffmpeg.
+
+Avoid:
+
+audible clicks
+large pauses
+different loudness between segments
+voice drift
+unnatural paragraph boundaries
+
+Normalize the final podcast.
+
+---
+
+# PODCAST VOICE PROFILE
+
+When several voices have similar technical quality, prefer a voice suited to Morgonkoll.
+
+Desired characteristics:
+
+Swedish
+adult
+warm
+calm
+credible
+intelligent
+conversational
+natural
+clear
+slightly energetic without sounding excited
+comfortable to listen to for 8–10 minutes
+
+Avoid voices that sound:
+
+robotic
+overly dramatic
+like an advertisement
+like a navigation system
+childish
+extremely slow
+extremely cheerful
+synthetic
+fatiguing
+
+Do not automatically prefer a male or female voice.
+
+Choose whichever sounds best for this format.
+
+---
+
+# PRONUNCIATION OPTIMIZATION
+
+Create:
+
+config/pronunciations.yml
+
+The system should be able to transform difficult written terms ONLY in narration.txt.
+
+Examples:
+
+AI
+Nvidia
+OpenAI
+Anthropic
+DeepMind
+Microsoft
+Minecraft
+Xbox
+PlayStation
+Nintendo
+ChatGPT
+GitHub
+Gemini
+
+The human-readable script must preserve correct spelling.
+
+The narration layer may use phonetic or pronunciation-friendly substitutions where they materially improve TTS output.
+
+Benchmark alternative pronunciations where useful.
+
+---
+
+# SPEAKING SPEED
+
+Automatically determine a sensible default speaking rate for the selected engine.
+
+Target approximately:
+
+145–165 spoken words per minute
+
+for a premium morning-news feel.
+
+Do not blindly time-stretch audio if native speaking-rate controls sound better.
+
+The final episode should normally be:
+
+7–9 minutes.
+
+If the script produces an episode outside that range:
+
+prefer adjusting future script length rather than aggressively altering audio speed.
+
+---
+
+# AUDIO POST-PROCESSING
+
+Use ffmpeg for final processing.
+
+Create:
+
+output/morgonkoll-YYYY-MM-DD.mp3
+
+Use high-quality MP3 encoding.
+
+Normalize loudness consistently across episodes.
+
+Aim for a sensible podcast loudness target.
+
+Avoid clipping.
+
+Remove excessive leading/trailing silence.
+
+Preserve natural pauses.
+
+Embed:
+
+episode title
+show title
+date
+cover artwork when available
+
+---
+
+# VOICE HEALTH CHECK
+
+The daily workflow should run a lightweight check before generating the full episode.
+
+Verify:
+
+selected TTS engine loads
+model exists
+voice exists
+dependencies work
+
+Do NOT generate the full benchmark every day.
+
+If the selected model becomes unavailable:
+
+attempt to use the previously identified second-best FREE local candidate.
+
+Never fall back to a paid API.
+
+If no acceptable free voice is available:
+
+fail safely.
+
+Report:
+
+"No compatible free TTS voice is currently available. No paid service was used."
+
+---
+
+# PERIODIC RE-EVALUATION
+
+The open-source TTS landscape improves quickly.
+
+Create a separate manually runnable workflow:
+
+.github/workflows/find-better-voice.yml
+
+It should:
+
+1. inspect currently available free/open-source Swedish-capable TTS options
+2. compare them with the currently selected voice
+3. benchmark promising alternatives
+4. produce audio samples
+5. produce a short comparison report
+
+Do NOT automatically replace my existing voice based purely on an uncertain quality metric.
+
+If a clearly better candidate is discovered:
+
+recommend it.
+
+Let me listen before switching.
+
+The normal morning workflow must remain stable.
+
+---
+
+# README
+
+Add a section:
+
+"Choosing the best free voice"
+
+Explain:
+
+- which voice Copilot selected
+- why it was selected
+- which alternatives were tested
+- model license
+- approximate model size
+- approximate generation time
+- how Swedish pronunciation compares
+- how to run the voice audition
+- how to switch voices
+- how to restore automatic selection
+
+Make the instructions simple.
+
+I should not need to understand machine learning.
+
+---
+
+# FINAL ACCEPTANCE CRITERIA
+
+Before completing the project:
+
+1. Research current free/open TTS options.
+2. Identify viable Swedish candidates.
+3. Actually test the strongest candidates where technically possible.
+4. Generate Swedish comparison samples.
+5. Select the best practical default.
+6. Verify it runs on ubuntu-latest.
+7. Verify no paid API is used.
+8. Verify long-form generation.
+9. Verify MP3 creation.
+10. Verify Telegram playback.
+11. Document the winner and alternatives.
+
+Do not choose a TTS engine merely because it is easy to implement.
+
+Within the strict zero-cost constraint:
+
+VOICE QUALITY IS THE PRIMARY TTS SELECTION CRITERION.
+
+The finished system should automatically use the best free Swedish voice Copilot can practically identify, while allowing me to audition and override that choice later.
