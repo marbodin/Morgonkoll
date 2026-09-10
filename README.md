@@ -61,17 +61,16 @@ must create your private bot credentials once:
    prompts and copy the bot token. Do not paste that token into chat or commit
    it to this repository.
 2. Open your new bot in Telegram and send it a message such as `Hej`.
-3. In a local terminal, set the token temporarily and inspect the bot updates:
+3. Run the secure setup helper from the project directory:
 
    ```bash
-   export TELEGRAM_BOT_TOKEN='token-from-BotFather'
-   curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates"
+   .venv/bin/python tools/setup_telegram.py
    ```
 
-   Copy the numeric value under `message.chat.id`.
-4. After publishing the repository, add two GitHub Actions repository secrets:
-   `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
-5. Run **Generate Morgonkoll** manually once and confirm that the audio arrives.
+   Paste the complete BotFather token at its hidden prompt. The helper discovers
+   your chat ID, saves both GitHub Actions secrets without writing the token to
+   disk or command history, and starts a test workflow.
+4. Follow the run with `gh run watch` and confirm that the audio arrives.
 
 `src.telegram_delivery` validates the final MP3 before upload and uses
 Telegram's `sendAudio` endpoint. It never logs the bot token. The workflow also
