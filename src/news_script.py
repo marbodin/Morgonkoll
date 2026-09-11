@@ -47,7 +47,7 @@ VERIFICATION_SCHEMA = {
     "required": ["supported", "unsupported_phrases"],
     "additionalProperties": False,
 }
-SECTION_CACHE_VERSION = 1
+SECTION_CACHE_VERSION = 2
 
 
 class ScriptGenerationError(MorgonkollError):
@@ -91,6 +91,8 @@ HÅRDA REGLER:
 - Material märkt primary är organisationens eget påstående och ska beskrivas som sådant.
 - Skriv egna korta sammanfattningar; kopiera inte långa formuleringar.
 - Nämn inte URL:er i talmanuset.
+- Börja inte med en hälsning och nämn inte Morgonkoll inne i sektionen.
+- Undvik redaktionell metatext som "vi hör mer", "idag pratar vi" eller "det är viktigt att notera".
 - Returnera endast JSON i exakt den form användaren begär.
 """
 
@@ -405,6 +407,23 @@ class LlamaScriptGenerator:
                         r"https?://|www\.", section_text, flags=re.IGNORECASE
                     ):
                         last_problems.append("ta bort URL:er")
+                    forbidden_meta = (
+                        "hej och välkommen",
+                        "i morgonkoll",
+                        "vi hör mer",
+                        "idag pratar vi",
+                        "det är viktigt att notera",
+                    )
+                    found_meta = [
+                        phrase
+                        for phrase in forbidden_meta
+                        if phrase in body.casefold()
+                    ]
+                    if found_meta:
+                        last_problems.append(
+                            "ta bort redaktionell metatext: "
+                            + ", ".join(found_meta)
+                        )
                     if heading and not last_problems:
                         try:
                             verification = model.create_chat_completion(

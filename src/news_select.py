@@ -135,6 +135,9 @@ def _cluster_story(
             dict.fromkeys(item.publisher_id or item.source_id for item in ordered)
         ),
         source_urls=list(dict.fromkeys(item.url for item in ordered)),
+        source_material=list(
+            dict.fromkeys(item.summary for item in ordered if item.summary)
+        ),
         allow_article_fetch=representative.allow_article_fetch,
         allowed_article_hosts=representative.allowed_article_hosts,
         score=score,

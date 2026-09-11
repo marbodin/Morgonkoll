@@ -44,8 +44,12 @@ def test_news_package_writes_source_artifacts(monkeypatch, tmp_path: Path) -> No
             source_names=[f"Source {index}"],
             source_urls=[f"https://example.com/{index}"],
             publisher_ids=[f"publisher-{index}"],
+            source_material=[
+                "Tillräckligt långt källmaterial för den automatiska "
+                "nyhetsgenomgångens kvalitetsfilter och test. " * 5
+            ],
         )
-        for index in range(6)
+        for index in range(8)
     ]
     monkeypatch.setattr("src.news_pipeline.load_news_sources", lambda: [object()])
     monkeypatch.setattr(
@@ -55,7 +59,7 @@ def test_news_package_writes_source_artifacts(monkeypatch, tmp_path: Path) -> No
     monkeypatch.setattr("src.news_pipeline.recent_articles", lambda articles, current: [])
     monkeypatch.setattr(
         "src.news_pipeline.select_stories",
-        lambda articles, sources, current: stories,
+        lambda articles, sources, current, **kwargs: stories,
     )
     monkeypatch.setattr(
         "src.news_pipeline.enrich_stories",
@@ -92,8 +96,12 @@ def test_news_package_uses_short_fallback_on_model_failure(
             source_names=[f"Source {index}"],
             source_urls=[f"https://example.com/{index}"],
             publisher_ids=[f"publisher-{index}"],
+            source_material=[
+                "Tillräckligt långt källmaterial för den automatiska "
+                "nyhetsgenomgångens kvalitetsfilter och test. " * 5
+            ],
         )
-        for index in range(6)
+        for index in range(8)
     ]
     monkeypatch.setattr("src.news_pipeline.load_news_sources", lambda: [object()])
     monkeypatch.setattr(
@@ -102,7 +110,7 @@ def test_news_package_uses_short_fallback_on_model_failure(
     monkeypatch.setattr("src.news_pipeline.recent_articles", lambda articles, current: [])
     monkeypatch.setattr(
         "src.news_pipeline.select_stories",
-        lambda articles, sources, current: stories,
+        lambda articles, sources, current, **kwargs: stories,
     )
     monkeypatch.setattr("src.news_pipeline.enrich_stories", lambda selected: {})
 

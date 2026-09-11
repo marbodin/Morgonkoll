@@ -72,7 +72,7 @@ sources:
     topic: economy
     source_type: editorial
     weight: 1.2
-    allow_article_fetch: false
+    allow_article_fetch: true
 
   - id: scb-statistics
     name: SCB Statistiknyheter

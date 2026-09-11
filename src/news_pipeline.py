@@ -80,8 +80,27 @@ def build_news_package(
     sources = load_news_sources()
     articles, errors = fetch_all_sources(sources, fetched_at=current)
     recent = recent_articles(articles, current)
-    stories = select_stories(recent, sources, current)
+    stories = select_stories(
+        recent,
+        sources,
+        current,
+        target_count=15,
+        minimum_count=10,
+    )
     enrichment_errors = enrich_stories(stories)
+    stories = [
+        story
+        for story in stories
+        if len(
+            " ".join(story.source_material).split()
+        ) >= 40
+        or len(story.source_ids) > 1
+    ][:12]
+    if len(stories) < 8:
+        raise MorgonkollError(
+            f"Only {len(stories)} selected stories had enough source material; "
+            "at least 8 are required for a full briefing"
+        )
     represented_sources = {
         publisher_id for story in stories for publisher_id in story.publisher_ids
     }

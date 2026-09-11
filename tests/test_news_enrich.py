@@ -14,7 +14,9 @@ def test_extract_article_text_removes_navigation_markup() -> None:
     markup = """
     <html><body><nav>Menu</nav><article><h1>Rubrik</h1>
     <p>Det här är den viktiga artikeltexten med flera tydliga meningar.</p>
-    <p>Ytterligare källmaterial finns i denna paragraf.</p></article></body></html>
+    <p>Ytterligare källmaterial finns i denna paragraf.</p>
+    <p>Så arbetar vi SVT:s nyheter ska stå för saklighet och opartiskhet.</p>
+    </article></body></html>
     """
 
     result = extract_article_text(
@@ -25,6 +27,7 @@ def test_extract_article_text_removes_navigation_markup() -> None:
 
     assert "viktiga artikeltexten" in result
     assert "Ytterligare källmaterial" in result
+    assert "Så arbetar vi" not in result
 
 
 def test_enrichment_uses_summary_when_article_fetch_is_disabled() -> None:

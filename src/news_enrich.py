@@ -18,6 +18,10 @@ from .network_safety import NO_REDIRECT_OPENER, validate_public_https_target
 USER_AGENT = "Morgonkoll/0.1 (+https://github.com/marbodin/Morgonkoll)"
 MAX_ARTICLE_BYTES = 2 * 1024 * 1024
 MAX_EXTRACTED_CHARS = 6_000
+BOILERPLATE_MARKERS = (
+    "Så arbetar vi SVT:s nyheter",
+    "KÖP ”Fighting optimists”",
+)
 
 
 def _robots_allows(
@@ -105,7 +109,13 @@ def extract_article_text(
     )
     if not text:
         raise RuntimeError("no article text could be extracted")
-    return " ".join(text.split())[:MAX_EXTRACTED_CHARS]
+    cleaned = " ".join(text.split())
+    for marker in BOILERPLATE_MARKERS:
+        if marker in cleaned:
+            cleaned = cleaned.split(marker, 1)[0].rstrip()
+    if not cleaned:
+        raise RuntimeError("only publisher boilerplate remained after extraction")
+    return cleaned[:MAX_EXTRACTED_CHARS]
 
 
 def enrich_stories(
@@ -128,9 +138,10 @@ def enrich_stories(
         for future in as_completed(futures):
             story = futures[future]
             try:
-                story.source_material = [future.result()]
+                extracted = future.result()
+                if extracted not in story.source_material:
+                    story.source_material.append(extracted)
             except Exception as exc:
-                story.source_material = [story.summary]
                 errors[story.id] = str(exc)
     for story in story_list:
         if not story.source_material:
