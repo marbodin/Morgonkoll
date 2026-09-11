@@ -8,6 +8,7 @@ import pytest
 from src.news_models import GeneratedScript, ScriptSection, Story
 from src.news_script import (
     LlamaScriptGenerator,
+    SECTION_SCHEMA,
     ScriptGenerationError,
     deterministic_short_script,
     validate_script,
@@ -82,3 +83,8 @@ def test_hub_transport_failure_becomes_generation_error(monkeypatch) -> None:
 
     with pytest.raises(ScriptGenerationError, match="resolve or download"):
         generator._load()
+
+
+def test_section_schema_only_allows_model_body() -> None:
+    assert set(SECTION_SCHEMA["properties"]) == {"body"}
+    assert SECTION_SCHEMA["required"] == ["body"]

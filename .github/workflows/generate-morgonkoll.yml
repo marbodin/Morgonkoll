@@ -11,6 +11,11 @@ on:
         required: false
         default: true
         type: boolean
+      send_to_telegram:
+        description: Send the finished episode to the configured Telegram chat
+        required: false
+        default: true
+        type: boolean
       script_path:
         description: Source script when live news is disabled
         required: false
@@ -133,6 +138,7 @@ jobs:
         run: python -m src.verify_audio "output/morgonkoll-${{ steps.inputs.outputs.episode_date }}.mp3"
 
       - name: Send episode to phone with Telegram
+        if: github.event_name == 'schedule' || inputs.send_to_telegram == true
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}

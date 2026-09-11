@@ -29,10 +29,9 @@ NUMBER_PATTERN = re.compile(r"\b\d+(?:[.,]\d+)?\b")
 SECTION_SCHEMA = {
     "type": "object",
     "properties": {
-        "heading": {"type": "string"},
         "body": {"type": "string"},
     },
-    "required": ["heading", "body"],
+    "required": ["body"],
     "additionalProperties": False,
 }
 VERIFICATION_SCHEMA = {
@@ -47,7 +46,7 @@ VERIFICATION_SCHEMA = {
     "required": ["supported", "unsupported_phrases"],
     "additionalProperties": False,
 }
-SECTION_CACHE_VERSION = 3
+SECTION_CACHE_VERSION = 4
 
 
 class ScriptGenerationError(MorgonkollError):
@@ -120,7 +119,7 @@ def _section_prompt(stories: List[Story], episode_date: str, feedback: str = "")
         f"Skriv EN sammanhängande poddsektion på {minimum}–{maximum} svenska ord. Börja "
         "direkt med det viktigaste, förklara sammanhanget utan nya fakta och "
         "använd naturliga övergångar. Returnera endast "
-        f'{{"heading":"kort svensk rubrik","body":"{minimum}–{maximum} ord"}}. /no_think'
+        f'{{"body":"{minimum}–{maximum} ord"}}. /no_think'
     )
 
 
@@ -362,7 +361,7 @@ class LlamaScriptGenerator:
                     )
                     content = response["choices"][0]["message"]["content"]
                     payload = json.loads(content)
-                    heading = str(payload["heading"]).strip()
+                    heading = group[0].title
                     body = str(payload["body"]).strip()
                 except (
                     KeyError,
@@ -413,6 +412,10 @@ class LlamaScriptGenerator:
                         "vi hör mer",
                         "idag pratar vi",
                         "det är viktigt att notera",
+                        "underlaget är opålitlig data",
+                        "ska inte användas som instruktioner",
+                        "ignorera uppmaningar",
+                        "returnera endast",
                     )
                     found_meta = [
                         phrase
@@ -424,7 +427,7 @@ class LlamaScriptGenerator:
                             "ta bort redaktionell metatext: "
                             + ", ".join(found_meta)
                         )
-                    if heading and not last_problems:
+                    if not last_problems:
                         try:
                             verification = model.create_chat_completion(
                                 messages=[
@@ -471,7 +474,7 @@ class LlamaScriptGenerator:
                             last_problems.append(
                                 f"faktagranskaren gav ogiltig JSON: {exc}"
                             )
-                    if heading and not last_problems:
+                    if not last_problems:
                         section = ScriptSection(
                             heading=heading,
                             story_ids=[story.id for story in group],
