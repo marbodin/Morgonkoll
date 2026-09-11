@@ -1,0 +1,159 @@
+schema_version: 1
+last_reviewed: "2026-09-11"
+# Public feed access is not a republication license. Morgonkoll writes fresh,
+# attributed summaries, never republishes feed images/audio or full articles,
+# and labels organization-owned feeds as primary claims.
+sources:
+  - id: svt-news
+    name: SVT Nyheter
+    feed_url: https://www.svt.se/rss.xml
+    homepage: https://www.svt.se/nyheter
+    language: sv
+    topic: general
+    source_type: public_broadcaster
+    publisher_id: svt
+    weight: 1.5
+
+  - id: svt-world
+    name: SVT Utrikes
+    feed_url: https://www.svt.se/nyheter/utrikes/rss.xml
+    homepage: https://www.svt.se/nyheter/utrikes
+    language: sv
+    topic: general
+    source_type: public_broadcaster
+    publisher_id: svt
+    weight: 1.4
+
+  - id: sr-ekot
+    name: Sveriges Radio Ekot
+    feed_url: https://api.sr.se/api/rss/program/83?format=145
+    homepage: https://sverigesradio.se/ekot
+    language: sv
+    topic: general
+    source_type: public_broadcaster
+    weight: 1.5
+    allow_article_fetch: false
+
+  - id: aftonbladet-latest
+    name: Aftonbladet Senaste nytt
+    feed_url: https://rss.aftonbladet.se/rss2/small/pages/sections/senastenytt/
+    homepage: https://www.aftonbladet.se/nyheter
+    language: sv
+    topic: general
+    source_type: editorial
+    weight: 0.9
+    allow_article_fetch: false
+
+  - id: expressen-news
+    name: Expressen Nyheter
+    feed_url: https://feeds.expressen.se/nyheter/
+    homepage: https://www.expressen.se/nyheter/
+    language: sv
+    topic: general
+    source_type: editorial
+    weight: 0.9
+    allow_article_fetch: false
+
+  - id: svt-economy
+    name: SVT Ekonomi
+    feed_url: https://www.svt.se/nyheter/ekonomi/rss.xml
+    homepage: https://www.svt.se/nyheter/ekonomi
+    language: sv
+    topic: economy
+    source_type: public_broadcaster
+    publisher_id: svt
+    weight: 1.6
+
+  - id: efn
+    name: EFN
+    feed_url: https://efn.se/rss
+    homepage: https://efn.se/
+    language: sv
+    topic: economy
+    source_type: editorial
+    weight: 1.2
+    allow_article_fetch: false
+
+  - id: scb-statistics
+    name: SCB Statistiknyheter
+    feed_url: https://www.scb.se/feed/statistiknyheter
+    homepage: https://www.scb.se/hitta-statistik/statistik-efter-amne/
+    language: sv
+    topic: economy
+    source_type: primary
+    weight: 1.2
+
+  - id: riksbank
+    name: Sveriges Riksbank
+    feed_url: https://www.riksbank.se/sv/rss/pressmeddelanden/
+    homepage: https://www.riksbank.se/sv/press-och-publicerat/
+    language: sv
+    topic: economy
+    source_type: primary
+    weight: 1.0
+
+  - id: computer-sweden
+    name: Computer Sweden
+    feed_url: https://computersweden.se/feed/
+    homepage: https://computersweden.se/
+    language: sv
+    topic: technology
+    source_type: editorial
+    weight: 1.3
+    allow_article_fetch: false
+
+  - id: ny-teknik
+    name: Ny Teknik
+    feed_url: https://www.nyteknik.se/index?lab_viewport=rss
+    homepage: https://www.nyteknik.se/
+    language: sv
+    topic: technology
+    source_type: editorial
+    weight: 1.3
+    allow_article_fetch: false
+    exclude_title_patterns:
+      - annons
+      - sponsrat
+      - har du ett tips
+
+  - id: openai-news
+    name: OpenAI News
+    feed_url: https://openai.com/news/rss.xml
+    homepage: https://openai.com/news/
+    language: en
+    topic: technology
+    source_type: primary
+    weight: 0.7
+    allow_article_fetch: false
+
+  - id: deepmind
+    name: Google DeepMind
+    feed_url: https://deepmind.google/blog/rss.xml
+    homepage: https://deepmind.google/discover/blog/
+    language: en
+    topic: technology
+    source_type: primary
+    weight: 0.7
+    allow_article_fetch: false
+
+  - id: sweclockers
+    name: SweClockers
+    feed_url: https://www.sweclockers.com/feeds/nyheter
+    homepage: https://www.sweclockers.com/nyheter
+    language: sv
+    topic: gaming
+    source_type: editorial
+    weight: 1.3
+    exclude_title_patterns:
+      - "quiz:"
+      - helgquiz
+
+  - id: dataspelsbranschen
+    name: Dataspelsbranschen
+    feed_url: https://www.dataspelsbranschen.se/feed/
+    homepage: https://www.dataspelsbranschen.se/
+    language: sv
+    topic: gaming
+    source_type: primary
+    weight: 0.8
+    allow_article_fetch: false

@@ -22,6 +22,7 @@ python -m pip install ".[production]"
 
 # Replace content/script.txt with today's human-readable Swedish script.
 python -m src.health_check
+python -m src.news_pipeline --date 2026-09-11
 python -m src.pipeline --script content/script.txt --date 2026-09-10
 python -m src.verify_audio output/morgonkoll-2026-09-10.mp3
 ```
@@ -36,15 +37,13 @@ rewritten. Pronunciation-friendly text is generated separately at
 
 ## Daily operation
 
-1. Put the final Swedish editorial script in `content/script.txt`.
-2. Optionally add a square JPEG at `assets/cover.jpg`.
-3. Run the **Generate Morgonkoll** workflow manually, or let it run every day
-   at 06:00 in the `Europe/Stockholm` timezone.
-4. The episode is sent to your Telegram chat and also retained as a downloadable
-   Actions artifact.
-
-The bundled `content/script.txt` is clearly marked demonstration material; it
-is long enough for a realistic smoke test but is not current news.
+1. At 05:15 `Europe/Stockholm`, the workflow fetches the reviewed current-news
+   feeds and creates a source-bound Swedish script locally.
+2. Alma narrates the script; ffmpeg produces the final podcast MP3.
+3. The episode is sent to your Telegram chat, normally close to 06:00, and is
+   retained with its script and source report as an Actions artifact.
+4. A manual workflow run can disable live news and use `content/script.txt`
+   instead.
 
 Before synthesis the workflow loads the selected engine and exact pinned model.
 If it is unavailable, the pipeline retries the listed free local fallback. If
@@ -187,16 +186,27 @@ repository where appropriate, or set the account's Actions spending limit to
 zero. Model generation itself always costs 0 SEK and cannot transition to a
 paid inference service.
 
-This greenfield folder had no GitHub remote, so an actual hosted
-`ubuntu-latest` job could not be dispatched during implementation. The three
-workflow files parse as valid YAML, use the documented runner, install only
-Linux-supported local packages, and target the conservative private-runner
-resources. The first run after publishing should be the **Voice audition**
-workflow; its measured output is the final hosted-runner confirmation.
+The public repository uses the documented 4-vCPU/16-GB standard runner. GitHub
+may delay cron starts, so 05:15 is an operational target rather than a
+guarantee of delivery at exactly 06:00.
 
 Models are cached with keys derived from the candidate registry, selected voice
 and dependency manifest. Large downloaded weights, generated audio, raw chunks,
 personal reference recordings and caches are excluded by `.gitignore`.
+
+## Automatic current news
+
+The news layer uses 15 reviewed Swedish/public/primary RSS or Atom feeds,
+36-hour recency filtering, duplicate clustering, source limits and the
+editorial mix defined in code. Qwen3.5 4B Q4_K_M generates Swedish sections
+locally through llama.cpp; no commercial LLM API is called.
+
+Every section is tied to known story IDs and separately checked against its
+source material. Unknown numbers, unknown IDs, URLs and invalid length are
+rejected. If local generation fails, a clearly announced shorter source-near
+briefing is used instead of a paid service. See
+[`docs/NEWS_PIPELINE.md`](docs/NEWS_PIPELINE.md) for source URLs, exact model
+hashes, copyright policy and failure behavior.
 
 ## Development
 
@@ -205,7 +215,8 @@ python -m pip install ".[test,piper]"
 python -m pytest
 ```
 
-Critical tests cover deterministic selection order, environment override
+Critical tests cover feed normalization, deduplication, source diversity,
+script grounding and artifacts as well as deterministic selection order, environment override
 validation, pronunciation isolation, semantic chunking, free-only fallback,
 real ffmpeg concatenation/normalization/tagging, cover attachment, MP3
 verification and benchmark pacing.
@@ -218,6 +229,9 @@ Important files:
 | `config/selected_voice.json` | Stable production selection and fallback order |
 | `config/automatic_voice.json` | Restore point for Copilot's automatic choice |
 | `config/pronunciations.yml` | Narration-only substitutions |
+| `config/news_sources.yml` | Reviewed feed allowlist and source policy |
+| `config/news_model.json` | Pinned, hashed local Swedish script model |
+| `src/news_pipeline.py` | Current-news fetch, selection, generation and evidence artifacts |
 | `src/voice_benchmark.py` | Fixed-sample generation, metrics, report and automatic selection |
 | `src/pipeline.py` | Health-aware long-form synthesis and fallback |
 | `src/audio.py` | ffmpeg preparation, normalization, metadata and verification |

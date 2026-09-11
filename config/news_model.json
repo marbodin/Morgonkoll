@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "qwen3.5-4b-q4-k-m",
+  "base_repository": "Qwen/Qwen3.5-4B",
+  "base_revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "repository": "bartowski/Qwen_Qwen3.5-4B-GGUF",
+  "revision": "4168f45a16a1290d65a4ec0fa312ae917a4c15d6",
+  "filename": "Qwen_Qwen3.5-4B-Q4_K_M.gguf",
+  "sha256": "13c16f426047e2de38cd075bdade4a7bcbc8c774384876f677740cda65f8a983",
+  "expected_size_bytes": 3013027808,
+  "license": "Apache-2.0",
+  "parameters": "4B",
+  "quantization": "Q4_K_M",
+  "context_size": 8192,
+  "max_output_tokens": 3000,
+  "threads": 4,
+  "chat_format": "chatml",
+  "reason": "Strongest current Swedish evidence in the practical 4B class, 201 documented languages, Apache-2.0 base and quant, anonymous download and a safe CPU/RAM footprint on the 4-vCPU/16-GB public ubuntu-latest runner."
+}

@@ -49,6 +49,13 @@ benchmark = [
 asr = [
   "faster-whisper>=1.1,<2",
 ]
+news = [
+  "feedparser==6.0.14",
+  "trafilatura==2.2.0",
+]
+news-llm = [
+  "llama-cpp-python==0.3.35",
+]
 test = [
   "pytest>=8,<10",
 ]

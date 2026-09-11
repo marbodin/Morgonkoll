@@ -16,3 +16,9 @@ def cache_dir() -> Path:
     path.mkdir(parents=True, exist_ok=True)
     return path
 
+
+def feed_cache_dir() -> Path:
+    configured = os.environ.get("MORGONKOLL_FEED_CACHE_DIR")
+    path = Path(configured).expanduser() if configured else ROOT / ".cache" / "news-feeds"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
