@@ -203,8 +203,9 @@ locally through llama.cpp; no commercial LLM API is called.
 
 Every section is tied to known story IDs and separately checked against its
 source material. Unknown numbers, unknown IDs, URLs and invalid length are
-rejected. If local generation fails, a clearly announced shorter source-near
-briefing is used instead of a paid service. See
+rejected. If local generation fails, Telegram receives a clearly announced
+metadata-only reserve notice; copied feed/article prose is not used as a
+shortcut and no paid service is called. See
 [`docs/NEWS_PIPELINE.md`](docs/NEWS_PIPELINE.md) for source URLs, exact model
 hashes, copyright policy and failure behavior.
 

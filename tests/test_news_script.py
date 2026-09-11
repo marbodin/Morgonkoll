@@ -62,6 +62,8 @@ def test_deterministic_fallback_preserves_source_mapping() -> None:
         story.id for story in stories
     }
     assert "kort" in script.intro
+    assert all("Företaget uppger" not in section.body for section in script.sections)
+    assert all("inga ytterligare detaljer" in section.body for section in script.sections)
 
 
 def test_hub_transport_failure_becomes_generation_error(monkeypatch) -> None:

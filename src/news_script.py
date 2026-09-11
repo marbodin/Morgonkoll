@@ -47,7 +47,7 @@ VERIFICATION_SCHEMA = {
     "required": ["supported", "unsupported_phrases"],
     "additionalProperties": False,
 }
-SECTION_CACHE_VERSION = 2
+SECTION_CACHE_VERSION = 3
 
 
 class ScriptGenerationError(MorgonkollError):
@@ -353,7 +353,7 @@ class LlamaScriptGenerator:
                         temperature=0.25,
                         top_p=0.85,
                         presence_penalty=0.6,
-                        max_tokens=320,
+                        max_tokens=512,
                         seed=1947 + group_index + attempt,
                         response_format={
                             "type": "json_object",
@@ -542,10 +542,11 @@ def deterministic_short_script(
     sections: List[ScriptSection] = []
     for story in stories:
         source = ", ".join(story.source_names)
-        summary = story.summary or "Källflödet innehåller ännu ingen längre sammanfattning."
         body = (
-            f"{story.title}. {source} rapporterar följande: {summary} "
-            "Detta är den information som finns i det hämtade källunderlaget just nu."
+            f"Den här nyheten valdes från {source}. Den lokala manusmodellen "
+            "kunde inte skapa en källkontrollerad sammanfattning, så "
+            "reservversionen återger inga ytterligare detaljer. Läs den länkade "
+            "originalrapporteringen i dagens källrapport."
         )
         sections.append(
             ScriptSection(

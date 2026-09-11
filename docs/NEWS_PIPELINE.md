@@ -22,9 +22,9 @@ arbitrary web content:
 7. Reject unknown story IDs, unsupported numbers, URLs and invalid total
    length. Preserve selected stories and source links beside the script.
 
-If local generation fails, the workflow emits a clearly identified shorter
-source-near briefing rather than calling a paid API or inventing a normal
-episode.
+If local generation fails, the workflow emits a clearly identified,
+metadata-only reserve notice rather than copying article/feed prose, calling a
+paid API or inventing a normal episode.
 
 ## Reviewed sources
 

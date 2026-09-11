@@ -137,9 +137,16 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
+          caption="God morgon! Här kommer Morgonkoll för ${{ steps.inputs.outputs.episode_date }}."
+          manifest="build/news/${{ steps.inputs.outputs.episode_date }}/manifest.json"
+          if [[ -f "$manifest" ]] && python -c \
+            'import json,sys; sys.exit(json.load(open(sys.argv[1])).get("fallback_reason") is None)' \
+            "$manifest"; then
+            caption="God morgon! Manusmodellen använde säker kortreserv för dagens Morgonkoll."
+          fi
           python -m src.telegram_delivery \
             "output/morgonkoll-${{ steps.inputs.outputs.episode_date }}.mp3" \
-            --caption "God morgon! Här kommer Morgonkoll för ${{ steps.inputs.outputs.episode_date }}."
+            --caption "$caption"
 
       - name: Upload episode
         if: always()
